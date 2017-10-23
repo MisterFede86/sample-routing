@@ -9,6 +9,6 @@ Tomcat 7
 Spring boot starter parent 1.5.1
 Spring security 4.0.3.RELEASE
 
-This project ,on this developing, after login on form call a rest api and shows the results. 
+This project after login on form ,calling http://localhost:8080/SpringSecurityWithRest/countries (credentials available on security-config.xml) ,invoke a rest api with spring Rest Template and elaaborating the output ;after it is creating a new format json with name and currencies of the nations. 
 
 
