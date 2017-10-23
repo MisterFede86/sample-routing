@@ -1,7 +1,6 @@
 package test.countries.springSecuritywithRest.controller;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.json.simple.JSONArray;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,45 +8,52 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import test.countries.springSecuritywithRest.bean.JsonCountry;
+
 @Controller
 public class CountriesController
 {
 	
 	
 
-	@RequestMapping(value = "/countries", method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
-	 public @ResponseBody ResponseEntity<String> getCountries()
+	@RequestMapping(value = "/countries", method = RequestMethod.GET)
+	 public @ResponseBody String getCountries()
 	 {
-	
-	
-
-	    RestTemplate restTemplate = new RestTemplate();
+		
+		RestTemplate restTemplate = new RestTemplate();
 	    ResponseEntity<String> response = restTemplate.getForEntity(
 	            "http://restcountries.eu/rest/v2/all",
 	            String.class);
 
-	    if (HttpStatus.OK == response.getStatusCode()) {
-	        System.out.println("prova "+ response);
-	    } else {
-	        // log error, retry or ? 
-	    }
-	  
-//	    HttpHeaders headers = new HttpHeaders();
-//        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-//        HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
-//
-//     ParameterizedTypeReference<List<CountriesStreamWrapper>> responseType = new ParameterizedTypeReference<List<CountriesStreamWrapper>>() {};
-//		  RestTemplate restTemplate = new RestTemplate();
-//		 ResponseEntity<List<CountriesStreamWrapper>> response = restTemplate.exchange( "http://restcountries.eu/rest/v2/all",
-//				 HttpMethod.GET , entity, responseType);  
-	    
+	    Gson gsonReaded = new Gson();
+       
+        JsonCountry[] jsonPatternCountryList = gsonReaded.fromJson(response.getBody().toString(), JsonCountry[].class);
+        
+        Gson documento = new Gson();
+        JSONArray objCountryList =   new JSONArray();
+        String countriesList = null ;
+        
+        for(int i=0;i<jsonPatternCountryList.length;i++) {
+        	
+             JsonObject objCurrency = new JsonObject();
+             objCurrency.addProperty("currencyName",jsonPatternCountryList[i].getCurrencies().get(0).getName());
+             JsonObject objCountryName = new JsonObject();
+             objCountryName.addProperty("Name", jsonPatternCountryList[i].getName());
+             objCountryName.add("Currency", objCurrency);
+             objCountryList.add(i,objCountryName);
 	
-	  return response;
+	  
 	 }
+        
+        countriesList =  documento.toJson(objCountryList);
+		return countriesList;
 		
 	
 	
-
+	 }
 	 
 
 		

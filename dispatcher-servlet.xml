@@ -5,11 +5,10 @@
 <property name="indentOutput" value="true"/>
 </bean>
 <mvc:annotation-driven>
-<mvc:message-converters>
-<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-<property name="objectMapper" ref="jackson2ObjectMapper"/>
-</bean>
-
+ <mvc:message-converters>
+      <bean class="org.springframework.http.converter.json.GsonHttpMessageConverter" />
+      <!-- other HttpMessageConverters you need here -->
+      <!-- Also: why adding Jackson's MessageConverter? Gson should pick JSON serialization in this case -->
 </mvc:message-converters>
 
 </mvc:annotation-driven>
